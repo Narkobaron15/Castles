@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Slingshot : MonoBehaviour
 {
+    private static Slingshot S;
+    
     [Header("Set in Inspector")]
     public GameObject prefabProjectile;
     public float velocityMultiplicator = 8f;
@@ -12,8 +14,10 @@ public class Slingshot : MonoBehaviour
     public Vector3 launchPos;
     
     public GameObject projectile;
-    public Rigidbody projectileRigidbody;
     
+    private Rigidbody _projectileRigidbody;
+    public static Vector3 LaunchPos => S == null ? Vector3.zero : S.launchPos;
+
     public bool aimingMode;
 
     private Camera _mainCamera;
@@ -21,6 +25,9 @@ public class Slingshot : MonoBehaviour
 
     private void Awake()
     {
+        S = this;
+        Transform launchPointTrans = transform.Find("LaunchPoint");
+        
         _sphereCollider = this.GetComponent<SphereCollider>();
         // Find the launch point transform (halo)
         var launchPointTransform = transform.Find("LaunchPoint");
@@ -40,8 +47,8 @@ public class Slingshot : MonoBehaviour
         // Start it at the launch point
         projectile.transform.position = launchPos;
         // Set it to isKinematic for now
-        projectileRigidbody = projectile.GetComponent<Rigidbody>();
-        projectileRigidbody.isKinematic = true;
+        _projectileRigidbody = projectile.GetComponent<Rigidbody>();
+        _projectileRigidbody.isKinematic = true;
     }
 
     private void OnMouseEnter()
@@ -88,8 +95,8 @@ public class Slingshot : MonoBehaviour
         if (!Input.GetMouseButtonUp(0)) return;
         
         aimingMode = false;
-        projectileRigidbody.isKinematic = false;
-        projectileRigidbody.velocity = -mouseDelta * velocityMultiplicator;
+        _projectileRigidbody.isKinematic = false;
+        _projectileRigidbody.velocity = -mouseDelta * velocityMultiplicator;
         
         FollowCam.Poi = projectile;
         projectile = null;
