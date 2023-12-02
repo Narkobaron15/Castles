@@ -13,9 +13,12 @@ public class LightingManager : MonoBehaviour
     [SerializeField, Range(0, 24), InspectorName("Time of Day")]
     private float timeOfDay;
 
+    private Camera _mainCamera;
+
     private void Start()
     {
         timeOfDay = 8f;
+        _mainCamera = Camera.main;
     }
 
     private void OnValidate()
@@ -31,7 +34,8 @@ public class LightingManager : MonoBehaviour
         var lights = FindObjectsOfType<Light>();
         try
         {
-            directionalLight = lights.First(l => l.type == LightType.Directional);
+            directionalLight = lights.First(l => 
+                l.type == LightType.Directional);
         }
         catch
         {
@@ -43,11 +47,13 @@ public class LightingManager : MonoBehaviour
     {
         RenderSettings.ambientLight = preset.AmbientColor.Evaluate(timePercent);
         RenderSettings.fogColor = preset.FogColor.Evaluate(timePercent);
+        _mainCamera.backgroundColor = preset.CameraBackgroundColor.Evaluate(timePercent);
         
         if (directionalLight is null) return;
         
         directionalLight.color = preset.DirectionalColor.Evaluate(timePercent);
-        directionalLight.transform.localRotation = Quaternion.Euler(140f, timePercent * 360f, 0);
+        directionalLight.transform.localRotation =
+            Quaternion.Euler(140f, timePercent * 360f, 0);
     }
 
     private void Update()

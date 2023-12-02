@@ -1,9 +1,8 @@
-using JetBrains.Annotations;
 using UnityEngine;
 
 public class FollowCam : MonoBehaviour
 {
-    [CanBeNull] public static GameObject Poi;
+    public static GameObject Poi;
     public float easing = 0.05f;
     public Vector2 minXY;
     

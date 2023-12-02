@@ -39,12 +39,12 @@ public class ProjectileLine : MonoBehaviour
     
     private void AddPoint() {
         var pt = _poi.transform.position;
-        if ( _points.Count > 0 && (pt - LastPoint).magnitude < minDist ) return;
+        if (_points.Count > 0 && (pt - LastPoint).magnitude < minDist) return;
         
         if ( _points.Count == 0 ) {
             var launchPosDiff = pt - Slingshot.LaunchPos;
             
-            _points.Add( pt + launchPosDiff );
+            _points.Add(pt + launchPosDiff);
             _points.Add(pt);
             _line.positionCount = 2;
             
@@ -53,7 +53,7 @@ public class ProjectileLine : MonoBehaviour
             
             _line.enabled = true;
         } else {
-            _points.Add( pt );
+            _points.Add(pt);
             
             _line.positionCount = _points.Count;
             _line.SetPosition( _points.Count-1, LastPoint );
@@ -63,14 +63,13 @@ public class ProjectileLine : MonoBehaviour
 
     private Vector3 LastPoint => _points is null ? Vector3.zero : _points[^1];
 
-    private void FixedUpdate () {
-        if (Poi is null) {
-            if (FollowCam.Poi is not null) {
-                if (FollowCam.Poi.CompareTag("Projectile")) {
-                    Poi = FollowCam.Poi;
-                } else return;
-            } else return;
-        }
+    private void FixedUpdate()
+    {
+        if (Poi is null && 
+            FollowCam.Poi is not null && 
+            FollowCam.Poi.CompareTag("Projectile"))
+            Poi = FollowCam.Poi;
+        else return;
         
         AddPoint();
         if ( FollowCam.Poi is null ) Poi = null;

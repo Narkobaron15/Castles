@@ -1,9 +1,8 @@
-using System;
 using UnityEngine;
 
 public class Slingshot : MonoBehaviour
 {
-    private static Slingshot S;
+    private static Slingshot _slingshot;
     
     [Header("Set in Inspector")]
     public GameObject prefabProjectile;
@@ -16,7 +15,7 @@ public class Slingshot : MonoBehaviour
     public GameObject projectile;
     
     private Rigidbody _projectileRigidbody;
-    public static Vector3 LaunchPos => S == null ? Vector3.zero : S.launchPos;
+    public static Vector3 LaunchPos => _slingshot == null ? Vector3.zero : _slingshot.launchPos;
 
     public bool aimingMode;
 
@@ -25,10 +24,9 @@ public class Slingshot : MonoBehaviour
 
     private void Awake()
     {
-        S = this;
-        Transform launchPointTrans = transform.Find("LaunchPoint");
-        
+        _slingshot = this;
         _sphereCollider = this.GetComponent<SphereCollider>();
+        
         // Find the launch point transform (halo)
         var launchPointTransform = transform.Find("LaunchPoint");
         launchPoint = launchPointTransform.gameObject;
@@ -62,11 +60,11 @@ public class Slingshot : MonoBehaviour
         // Hide the launch point (its halo)
         launchPoint.SetActive(false);
     }
-
+    
     private void Update()
     {
         if (!aimingMode) return;
-        
+
         // Get the current mouse position in 2D screen coordinates
         // And convert into world points
         var mousePos2D = Input.mousePosition;
