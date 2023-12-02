@@ -1,6 +1,9 @@
 using System.Linq;
 using UnityEngine;
 
+// Credits to Spoonie and Brackeys
+// https://www.youtube.com/watch?v=m9hj9PdO328
+
 [ExecuteAlways]
 public class LightingManager : MonoBehaviour
 {
@@ -10,14 +13,10 @@ public class LightingManager : MonoBehaviour
     [SerializeField, InspectorName("Lighting Preset")] 
     private LightingPreset preset;
 
-    [SerializeField, Range(0, 24), InspectorName("Time of Day")]
-    private float timeOfDay;
-
     private Camera _mainCamera;
 
     private void Start()
     {
-        timeOfDay = 8f;
         _mainCamera = Camera.main;
     }
 
@@ -59,13 +58,6 @@ public class LightingManager : MonoBehaviour
     private void Update()
     {
         if (preset is null) return;
-        
-        if (Application.isPlaying)
-        {
-            timeOfDay += Time.deltaTime / 60f;
-            timeOfDay %= 24;
-        }
-        
-        UpdateLightning(timeOfDay / 24f);
+        UpdateLightning(TimeManager.TimeOfDay / 24f);
     }
 }
