@@ -1,3 +1,6 @@
+using System;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class FollowCam : MonoBehaviour
@@ -29,6 +32,7 @@ public class FollowCam : MonoBehaviour
             {
                 if (Poi.GetComponent<Rigidbody>().IsSleeping())
                 {
+                    ProjectileDestruction(Poi);
                     Poi = null;
                     return;
                 }
@@ -42,5 +46,14 @@ public class FollowCam : MonoBehaviour
         
         transform.position = destination;
         _mainCamera.orthographicSize = destination.y + DefaultCamSize / 1.53f;
+    }
+
+    private async void ProjectileDestruction(
+        [NotNull] GameObject projectile,
+        float awaitSeconds = 1.5f)
+    {
+        if (projectile is null) throw new ArgumentNullException(nameof(projectile));
+        await Task.Delay(TimeSpan.FromSeconds(awaitSeconds));
+        Destroy(projectile);
     }
 }

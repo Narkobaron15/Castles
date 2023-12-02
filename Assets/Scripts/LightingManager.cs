@@ -62,11 +62,10 @@ public class LightingManager : MonoBehaviour
         
         if (Application.isPlaying)
         {
-            timeOfDay += Time.deltaTime;
+            timeOfDay += Time.deltaTime / 60f;
             timeOfDay %= 24;
         }
         
         UpdateLightning(timeOfDay / 24f);
-
     }
 }
